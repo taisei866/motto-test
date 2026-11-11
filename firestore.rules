@@ -1,0 +1,82 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    function signed() { return request.auth != null; }
+    function me() { return request.auth.uid; }
+    function member() { return signed() && exists(/databases/$(db)/documents/members/$(me())); }
+    function admin() { return signed() && exists(/databases/$(db)/documents/admins/$(me())); }
+    function str(v, max) { return v is string && v.size() <= max; }
+
+    // 招待コード（コンソールで手動作成。誰も読めない）
+    match /secrets/{d} { allow read, write: if false; }
+
+    // 運営者（コンソールで手動作成）
+    match /admins/{uid} { allow read: if signed() && me() == uid; allow write: if false; }
+
+    // 招待コードの照合（正しいコードのときだけ作成できる。読めない）
+    match /joins/{uid} {
+      allow create: if signed() && me() == uid
+        && request.resource.data.keys().hasOnly(['code'])
+        && request.resource.data.code == get(/databases/$(db)/documents/secrets/invite).data.code;
+      allow read, update, delete: if false;
+    }
+
+    // 参加者（ニックネーム）
+    match /members/{uid} {
+      allow read: if member();
+      allow create: if signed() && me() == uid
+        && exists(/databases/$(db)/documents/joins/$(uid))
+        && request.resource.data.keys().hasOnly(['nick', 'joinedAt'])
+        && str(request.resource.data.nick, 20) && request.resource.data.nick.size() > 0;
+      allow update: if signed() && me() == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nick'])
+        && str(request.resource.data.nick, 20) && request.resource.data.nick.size() > 0;
+      allow delete: if false;
+    }
+
+    // 投稿
+    match /posts/{id} {
+      allow read: if member();
+      allow create: if member()
+        && request.resource.data.keys().hasOnly(['uid','show','behind','vis','at','usedAgent','usedExamples'])
+        && request.resource.data.uid == me()
+        && str(request.resource.data.show, 200) && request.resource.data.show.size() > 0
+        && str(request.resource.data.behind, 500) && request.resource.data.behind.size() > 0
+        && request.resource.data.vis in ['open', 'lock']
+        && request.resource.data.at is number
+        && request.resource.data.usedAgent is bool && request.resource.data.usedExamples is bool;
+      allow update: if false;
+      allow delete: if member() && (resource.data.uid == me() || admin());
+    }
+
+    // スタンプ（ドキュメントID = 投稿ID_自分のuid）
+    match /stamps/{id} {
+      allow read: if member();
+      allow create, update: if member()
+        && request.resource.data.keys().hasOnly(['postId','uid','kinds'])
+        && request.resource.data.uid == me()
+        && id == request.resource.data.postId + '_' + me()
+        && request.resource.data.kinds is list && request.resource.data.kinds.size() <= 5;
+      allow delete: if member() && resource.data.uid == me();
+    }
+
+    // エージェントの記憶（本人だけ）
+    match /memory/{uid} {
+      allow read, write: if member() && me() == uid;
+    }
+
+    // 通報（作成は参加者、閲覧は運営者）
+    match /reports/{id} {
+      allow create: if member() && request.resource.data.uid == me()
+        && request.resource.data.keys().hasOnly(['uid','postId','at']);
+      allow read, delete: if admin();
+      allow update: if false;
+    }
+
+    // 試用期間
+    match /config/{d} {
+      allow read: if member();
+      allow write: if admin();
+    }
+  }
+}

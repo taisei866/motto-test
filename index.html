@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#e2557a">
+<title>motto!</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Kaisei+Decol:wght@700&display=swap">
+<style>
+:root{
+  --bg:#f6f1f3; --surface:#ffffff; --fg:#2b2228; --muted:#7d6f77; --line:#ecdfe4;
+  --accent:#e2557a; --accent-soft:#fde8ee; --behind:#3f6fb0; --behind-soft:#e8f0fb;
+  --font-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
+  --font-logo:"Kaisei Decol","Zen Maru Gothic",serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#18141a; --surface:#221c24; --fg:#f2e9ee; --muted:#ab9ca5; --line:#382e3a;
+  --accent:#f07197; --accent-soft:#3a2230; --behind:#8bb2ea; --behind-soft:#1e2a3b; color-scheme:dark}}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px;box-sizing:border-box}
+*{box-sizing:border-box}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{display:flex;gap:40px;justify-content:center;align-items:flex-start;max-width:1000px;margin:0 auto}
+.intro{max-width:340px;min-width:0;padding-top:24px}
+.intro h1{font-family:var(--font-logo);font-size:44px;margin:0;color:var(--accent);line-height:1.1}
+.intro p{color:var(--muted);margin:12px 0}
+.intro ol{padding-left:1.2em;margin:8px 0;display:grid;gap:6px}
+.note{font-size:12px;background:var(--accent-soft);color:var(--fg);border-radius:8px;padding:8px 12px}
+.phone{position:relative;width:390px;max-width:100%;height:760px;max-height:calc(100vh - 40px);min-height:560px;background:var(--surface);border:1px solid var(--line);
+  border-radius:32px;box-shadow:0 20px 50px rgba(120,60,85,.15);display:flex;flex-direction:column;overflow:hidden}
+@media (max-width:820px){.wrap{flex-direction:column;align-items:center;gap:16px}.intro{max-width:390px;padding-top:0}.intro h1{font-size:34px}.intro ol,.intro .note{display:none}}
+@media (max-width:440px){body{padding:0}.intro{display:none}.phone{border-radius:0;border:0;height:100vh;max-height:none;width:100%}}
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 8px;border-bottom:1px solid var(--line)}
+.logo{font-family:var(--font-logo);font-size:26px;font-weight:700}
+.logo span{color:var(--accent)}
+.top small{color:var(--muted);font-size:12px}
+.screen{flex:1;overflow-y:auto;padding:14px 16px 20px;min-height:0}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs button{background:none;border:0;padding:10px 0 12px;font-size:11px;color:var(--muted);display:grid;justify-items:center;gap:2px}
+.tabs button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+.tabs button[aria-current="true"]{color:var(--accent);font-weight:700}
+.tabs[hidden]{display:none}
+.post{border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:14px;display:grid;gap:10px}
+.who{display:flex;align-items:center;gap:10px}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#fff;font-size:14px;flex:none}
+.who b{display:block;font-size:14px}.who small{color:var(--muted);font-size:11px}
+.part{border-radius:12px;padding:10px 12px;white-space:pre-wrap}
+.part .lb{font-size:11px;font-weight:900;letter-spacing:.08em;display:inline-block;margin-bottom:4px}
+.show{background:var(--accent-soft)}.show .lb{color:var(--accent)}
+.behind{background:var(--behind-soft)}.behind .lb{color:var(--behind)}
+.locked{background:var(--behind-soft);text-align:center;color:var(--muted);font-size:13px;position:relative;white-space:normal}
+.locked .blur{filter:blur(5px);user-select:none;color:var(--fg);text-align:left}
+.locked .msg{position:absolute;inset:0;display:grid;place-content:center;gap:6px;padding:8px}
+.locked .msg button{background:var(--behind);color:var(--surface);border:0;border-radius:99px;padding:6px 14px;font-size:12px;font-weight:700}
+.stamps{display:flex;gap:6px;flex-wrap:wrap}
+.stamps button{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:3px 10px;font-size:12px}
+.stamps button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:700}
+.hint{font-size:11px;color:var(--muted)}
+label.f{display:block;font-size:12px;font-weight:900;margin:12px 0 4px}
+textarea,input[type=text],input[type=date]{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--surface);resize:vertical}
+.cnt{text-align:right;font-size:11px;color:var(--muted)}
+.btn{border:0;border-radius:99px;padding:11px 16px;font-weight:700;width:100%}
+.btn.main{background:var(--accent);color:#fff}
+.btn.sub{background:var(--behind-soft);color:var(--behind);display:flex;gap:8px;justify-content:center;align-items:center;margin-top:4px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.vis{display:grid;gap:8px;margin:6px 0 14px}
+.vis label{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:13px}
+.vis small{display:block;color:var(--muted);font-size:11px}
+.chat{display:grid;gap:10px}
+.msg-a,.msg-u{max-width:85%;padding:9px 12px;border-radius:16px;font-size:14px;white-space:pre-wrap}
+.msg-a{background:var(--behind-soft);border-top-left-radius:4px}
+.msg-u{background:var(--accent);color:#fff;justify-self:end;border-top-right-radius:4px}
+.agent-head{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.bot{width:40px;height:40px;border-radius:12px;background:var(--behind);display:grid;place-items:center}
+.bot svg{width:26px;height:26px}
+.chips{display:grid;gap:6px}
+.chips button{text-align:left;border:1px solid var(--behind);background:var(--surface);color:var(--behind);border-radius:12px;padding:7px 12px;font-size:13px}
+.inrow{display:flex;gap:8px;margin-top:6px}
+.inrow input{flex:1;min-width:0}
+.inrow button{background:var(--behind);color:var(--surface);border:0;border-radius:12px;padding:0 14px;font-weight:700}
+.memo{border:1px dashed var(--behind);border-radius:12px;padding:10px 12px;font-size:13px}
+.memo ul{margin:6px 0 10px;padding-left:1.2em}
+.exs{display:grid;gap:8px;margin-top:8px}
+.ex{border:1px dashed var(--behind);border-radius:12px;padding:10px 12px;font-size:13px;display:grid;gap:6px}
+.ex .lb{font-size:11px;font-weight:900;color:var(--behind)}
+.ex button{justify-self:start;background:none;border:0;color:var(--behind);font-size:12px;font-weight:700;padding:0;text-decoration:underline}
+.mem{background:var(--behind-soft);border-radius:14px;padding:12px;font-size:13px}
+.mem h3,.tl h3{margin:0 0 6px;font-size:14px}
+.tl{margin-top:16px}
+.tl ol{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid var(--line);display:grid;gap:12px}
+.tl li{position:relative}
+.tl li::before{content:"";position:absolute;left:-20px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.tl time{font-size:11px;color:var(--muted)}
+.toast{position:absolute;left:50%;transform:translateX(-50%);bottom:90px;background:var(--fg);color:var(--surface);padding:8px 16px;border-radius:99px;font-size:13px;z-index:5;max-width:90%;text-align:center}
+@media (prefers-reduced-motion:no-preference){.post,.msg-a,.msg-u{animation:in .25s ease-out}}
+@keyframes in{from{transform:translateY(4px);opacity:.6}to{transform:none;opacity:1}}
+.empty{text-align:center;color:var(--muted);padding:40px 12px;display:grid;gap:10px;justify-items:center}
+.empty b{color:var(--fg)}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.mini{background:none;border:0;color:var(--muted);font-size:11px;padding:2px 4px;text-decoration:underline}
+.got{font-size:12px;color:var(--accent)}
+.banner{font-size:12px;border-radius:10px;padding:8px 10px;background:var(--accent-soft);margin-bottom:12px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.stat{border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.stat b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.stat span{font-size:11px;color:var(--muted)}
+.owner{border:1px solid var(--accent);border-radius:14px;padding:12px;margin-top:16px;display:grid;gap:8px}
+.owner h3,.owner h4{margin:0;font-size:14px}
+.dates{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
+.dates label{font-size:12px;display:grid;gap:2px;flex:1;min-width:120px}
+.dates button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:9px 12px;font-weight:700}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.confirm button{border:0;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700}
+.rep{border-top:1px solid var(--line);padding-top:6px;font-size:12px}
+.join{display:grid;gap:4px;padding-top:12px}
+.join h2{font-family:var(--font-logo);color:var(--accent);margin:0 0 4px;font-size:26px}
+.err{color:var(--accent);font-size:12px;min-height:1.2em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="intro">
+    <h1>motto!</h1>
+    <p>結果だけじゃない。過程までシェアするSNSアプリの試用版です。</p>
+    <ol>
+      <li>「投稿」でSHOW（結果）を書く</li>
+      <li>迷ったら「エージェントに相談」や「BEHINDの例を見る」</li>
+      <li>BEHIND（過程）を自分の言葉で書いて投稿</li>
+      <li>投稿すると、みんなの鍵ありBEHINDが読めるようになります</li>
+      <li>気持ちが伝わったら、スタンプで反応（数は表示されません）</li>
+    </ol>
+    <p class="note">試用版です。投稿は参加者全員に公開されます。本名・学校名・住所など個人が特定される内容は書かないでください。エージェントの質問はAI（Google Gemini）が考えます。無料枠を使っているため、AIへの入力内容はGoogleのサービス改善に使われる場合があります。18歳以上の方のみ参加できます。</p>
+  </section>
+  <div class="phone">
+    <header class="top"><div class="logo">motto<span>!</span></div><small id="topSub"></small></header>
+    <main class="screen" id="screen"><div class="empty">読み込んでいます…</div></main>
+    <nav class="tabs" id="tabs" aria-label="画面切り替え" hidden>
+      <button data-tab="home" aria-current="true"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>ホーム</button>
+      <button data-tab="post"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg>投稿</button>
+      <button data-tab="agent"><svg viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="4"/><path d="M12 4v4M9 13h.01M15 13h.01"/></svg>エージェント</button>
+      <button data-tab="me"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>マイページ</button>
+    </nav>
+  </div>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
